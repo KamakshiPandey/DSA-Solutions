@@ -1,0 +1,81 @@
+Approach – Prefix Sum + Hash Map (One Pass)
+We use the prefix sum technique along with an unordered_map to detect and remove zero-sum sublists in one traversal.
+
+Steps
+Dummy Node:
+Add a dummy node at the start of the list to handle cases where the zero-sum sequence starts at the head.
+
+Prefix Sum Map:
+Maintain a running prefix sum while traversing the list.
+
+If the current prefix sum has not been seen before, store it in the map with the current node.
+
+If it has been seen, it means the nodes between the previous occurrence and the current node sum to zero.
+
+Deletion of Zero-Sum Segment:
+When a zero-sum sequence is found, remove all intermediate prefix sums from the map and adjust pointers to skip over the zero-sum nodes.
+
+One Pass Efficiency:
+We handle both detection and deletion in a single traversal, ensuring O(n) time complexity and O(n) space.
+
+Complexity
+Time: O(n) — We traverse the list once, each node is processed at most twice.
+
+Space: O(n) — Prefix sums stored in hash map.
+///solution
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+ ListNode*removal_zeropair( ListNode*head){
+    unordered_map<int, ListNode*>m;
+     ListNode*cur=head,*dummy=new ListNode(0);
+
+     m[0]=dummy;
+     dummy->next=head;
+     int presum=0;
+     while(cur){
+        presum+=cur->val;
+        if(m.find(presum)!=m.end() ){
+            ListNode*start=m.find(presum)->second;
+            ListNode*temp=start;
+            int psum=presum;
+        while(temp!=cur){
+             
+             temp=temp->next;
+        
+            psum+=temp->val;
+             
+          if(temp!=cur){
+            m.erase(psum);
+          }
+           
+        }
+        start->next=cur->next;
+        }
+        else{
+            m.insert({presum,cur});
+           
+           
+        }
+         cur=cur->next;
+         
+     }
+    
+     return dummy->next;
+
+    
+ }
+    ListNode* removeZeroSumSublists(ListNode* head) {
+        return removal_zeropair(head);
+        
+    }
+};

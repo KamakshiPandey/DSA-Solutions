@@ -1,31 +1,36 @@
-# DSA-Solutions
-2181. Merge Nodes in Between Zeros
-. /*
-Problem: Merge Nodes in Between Zeros (LeetCode #2181)
-Link: https://leetcode.com/problems/merge-nodes-in-between-zeros/
+# 🧮 DSA LeetCode Solutions
 
-Description:
-You are given the head of a linked list that contains sequences of integers 
-separated by nodes with value 0 (the list starts and ends with 0).
-Your task is to merge the values between each pair of 0s into a single sum 
-and return a new linked list containing these sums.
+This repository contains **hand-picked solutions** to important Data Structures & Algorithms (DSA) problems from **LeetCode**.  
+Each solution is implemented with **clean code**, **optimal approach**, and **clear explanations** to help in interview preparation.
 
-Example:
-Input: 0 -> 3 -> 1 -> 0 -> 4 -> 5 -> 2 -> 0
-Output: 4 -> 11
-Explanation:
-- Between first and second 0: sum = 3 + 1 = 4
-- Between second and third 0: sum = 4 + 5 + 2 = 11
+---
 
-Approach:
-- Traverse the linked list while keeping a running sum.
-- When you encounter a 0:
-  - If the sum is non-zero, create a new node with that sum and append it to the result list.
-  - Reset the sum to 0.
-- Skip the first 0 and stop at the last 0.
+## 📌 Contents
 
-Time Complexity: O(n) — each node is visited once.
-Space Complexity: O(1) — only a few pointers and variables used.
-*/
+- **Arrays & Strings**
+- **Linked List**
+- **Stacks & Queues**
+- **Recursion & Backtracking**
+- **Hashing**
+- **Sorting & Searching**
+- **Binary Trees**
+- **Binary Search Trees (BST)**
+- **Graphs**
+- **Dynamic Programming (DP)**
+- **Greedy Algorithms**
+- **Miscellaneous**
 
+---
+
+## 🎯 Features
+
+- **Optimal Solutions** – Focused on minimizing time & space complexity.
+- **Multiple Approaches** – Where applicable, includes both brute-force & optimized methods.
+- **Well-Commented Code** – Easy to understand.
+- **Problem Links** – Direct link to the corresponding LeetCode problem.
+- **Ready for Interviews** – Covers frequently asked patterns.
+
+---
+
+## 📂 Folder Structure
 

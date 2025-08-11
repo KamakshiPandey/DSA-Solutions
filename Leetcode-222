@@ -1,0 +1,30 @@
+📌 Count Nodes in a Binary Tree (C++)
+This program implements a recursive function to count the total number of nodes in a binary tree.
+
+Uses Depth-First Search (DFS) traversal to visit every node.
+
+Base case: returns 0 when the node is NULL.
+
+Recursive case: counts the current node (1) plus counts from left and right subtrees.
+
+Time Complexity: O(n) — visits each node exactly once.
+Space Complexity: O(h) — recursion stack proportional to tree height.
+class Solution {
+public:
+int count(TreeNode*root){
+
+    if(root==NULL){
+        return 0;
+    }
+    
+    return 1+count(root->left)+count(root->right);
+   
+    
+}
+    int countNodes(TreeNode* root) {
+        int maxi=0;
+        return count(root);
+       
+        
+    }
+};

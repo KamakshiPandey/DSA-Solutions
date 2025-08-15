@@ -1,0 +1,50 @@
+/**
+ * Approach:
+ * We need to check if there exists a root-to-leaf path in the binary tree such that
+ * the sum of all node values along that path equals the given `targetSum`.
+ *
+ * Key idea:
+ * - At each node, subtract its value from `targetSum`.
+ * - If we reach a leaf node (both children are NULL) and the remaining targetSum
+ *   equals the node’s value, then a valid path exists.
+ * - Recursively check the left and right subtrees with the updated targetSum.
+ * - Use logical OR between the left and right results since only one valid path is needed.
+ *
+ * Time Complexity: O(N) — where N is the number of nodes (each visited once).
+ * Space Complexity: O(H) — where H is the height of the tree (recursion stack).
+ */
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+int summison_nodes(TreeNode*root,int target){
+          if(root==NULL){
+            return 0;
+          
+          }
+          if(root->left==NULL && root->right==NULL){
+            if(target==root->val){
+                return 1;
+            }
+            return 0;
+          }
+         return summison_nodes(root->left,target-root->val) ||summison_nodes(root->right,target-root->val);   
+}
+
+bool hasPathSum(TreeNode* root, int targetSum) {
+    if(root==NULL){
+        return false;
+    }
+     return summison_nodes(root,targetSum);  
+    }
+};

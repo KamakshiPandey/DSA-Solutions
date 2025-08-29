@@ -1,0 +1,22 @@
+class Solution {
+public:
+ vector<int>right_shift(vector<int>&arr,int n){
+    
+    for(int i=0;i<n;i++){
+        if(i+1<n){
+          int shift=*max_element(arr.begin()+i+1,arr.end());
+             arr[i]=shift;
+        }
+
+        
+    }
+    arr[n-1]=-1;
+    return arr;
+
+ }
+    vector<int> replaceElements(vector<int>& arr) {
+        int n=arr.size();
+      return  right_shift(arr,n);
+        
+    }
+};

@@ -1,0 +1,46 @@
+class Solution {
+public:
+    vector<int> row = {-1, 0, 1, 0};
+    vector<int> col = {0, 1, 0, -1};
+    int res = 0;
+    int count = 0;
+    queue<pair<int, pair<int, int>>> pq;
+    void path_exactly_once(vector<vector<int>>& grid, int n, int m, int nr,
+                           int nc, int remain) {
+
+        if (nr < 0 || nr >= n || nc < 0 || nc >= m || grid[nr][nc] == -1) {
+            return;
+        }
+        if (grid[nr][nc] == 2) {
+            if (remain == 0) {
+                res++;
+                return;
+            }
+        }
+        int temp = grid[nr][nc];
+        grid[nr][nc] = -1;
+
+        for (int i = 0; i < 4; i++) {
+
+            path_exactly_once(grid, n, m, nr + row[i], nc + col[i], remain - 1);
+        }
+        grid[nr][nc] = temp;
+    }
+    int uniquePathsIII(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        vector<vector<int>> visi(n, vector<int>(m, 0));
+        int start = 0, end = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 0) {
+                    count++;
+                } else if (grid[i][j] == 1) {
+                    start = i, end = j;
+                }
+            }
+        }
+        path_exactly_once(grid, n, m, start, end, count + 1);
+        return res;
+    }
+};

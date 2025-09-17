@@ -13,6 +13,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Auto Label & Assign Reviewers
+        id: label_review
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -44,3 +45,20 @@ jobs:
               pull_number: context.payload.pull_request.number,
               reviewers: reviewers
             });
+
+            // Return labels for Slack notification
+            return labels.join(", ");
+          result-encoding: string
+
+      - name: Send PR Info to Slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID }}
+          slack-message: |
+            :star: New PR Created
+            *Title:* ${{ github.event.pull_request.title }}
+            *Author:* ${{ github.actor }}
+            *Labels:* ${{ steps.label_review.outputs.result }}
+            *Reviewers:* dev1, dev2
+            *Link:* ${{ github.event.pull_request.html_url }}

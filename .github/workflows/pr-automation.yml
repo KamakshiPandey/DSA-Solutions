@@ -1,0 +1,46 @@
+name: PR Automation
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  auto-label-assign:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Auto Label & Assign Reviewers
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const labels = [];
+            const reviewers = ["dev1", "dev2"]; // GitHub usernames
+
+            const prTitle = context.payload.pull_request.title.toLowerCase();
+
+            // Auto-label based on PR title keywords
+            if (prTitle.includes("fix") || prTitle.includes("bug")) labels.push("bug");
+            if (prTitle.includes("feature") || prTitle.includes("enhancement")) labels.push("enhancement");
+            if (prTitle.includes("doc") || prTitle.includes("readme")) labels.push("documentation");
+
+            // Apply labels
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                labels: labels
+              });
+            }
+
+            // Assign reviewers
+            await github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: reviewers
+            });

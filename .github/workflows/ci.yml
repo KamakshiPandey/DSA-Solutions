@@ -1,10 +1,10 @@
-name: CI Test
+name: CI/CD Workflow
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
@@ -14,5 +14,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run a one-line script
+      - name: Run tests
         run: echo "✅ GitHub Actions workflow is working!"
+
+      - name: Notify Slack (Success/Failure)
+        if: always()   # Runs even if previous step fails
+        run: |
+          STATUS="✅ Passed"
+          if [ "${{ job.status }}" != "success" ]; then
+            STATUS="❌ Failed"
+          fi
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\": \"CI/CD Workflow Result: $STATUS\nRepo: $GITHUB_REPOSITORY\nCommit: $GITHUB_SHA\"}" \
+            ${{ secrets.SLACK_WEBHOOK_URL }}

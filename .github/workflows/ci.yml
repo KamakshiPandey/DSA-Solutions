@@ -4,26 +4,33 @@ on:
   push:
     branches:
       - main
+      - feature-branch
   pull_request:
 
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run tests
-        run: echo "✅ GitHub Actions workflow is working!"
-
-      - name: Notify Slack (Success/Failure)
-        if: always()   # Runs even if previous step fails
+      - name: Run Tests
         run: |
-          STATUS="✅ Passed"
-          if [ "${{ job.status }}" != "success" ]; then
-            STATUS="❌ Failed"
-          fi
+          echo "Running tests..."
+          # put your test command here
+          exit 1  # <-- force failure for testing (remove later)
+
+      - name: Slack Notification (on success)
+        if: success()
+        run: |
           curl -X POST -H 'Content-type: application/json' \
-            --data "{\"text\": \"CI/CD Workflow Result: $STATUS\nRepo: $GITHUB_REPOSITORY\nCommit: $GITHUB_SHA\"}" \
-            ${{ secrets.SLACK_WEBHOOK_URL }}
+          --data '{"text": "✅ CI/CD Passed for repo *${{ github.repository }}*, commit: ${{ github.sha }}"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Slack Notification (on failure with mention)
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text": "🚨 CI/CD *FAILED*! <@U09FB4F63A9> please check. Repo: *${{ github.repository }}*, commit: ${{ github.sha }}"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}

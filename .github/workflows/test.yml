@@ -1,0 +1,48 @@
+name: Run Tests & Notify Slack
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Tests
+        id: run_tests
+        run: |
+          pytest > result.log || true
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+          echo "logs=$(cat result.log)" >> $GITHUB_OUTPUT
+
+      - name: Send Slack Notification
+        if: always()
+        run: |
+          STATUS="❌ Failed"
+          if [ "${{ steps.run_tests.outputs.exit_code }}" -eq 0 ]; then
+            STATUS="✅ Passed"
+          fi
+
+          PAYLOAD="{
+            \"text\": \"*CI/CD Test Results*\nRepository: $GITHUB_REPOSITORY\nCommit: $GITHUB_SHA\nStatus: $STATUS\nLogs: \`\`\`${{ steps.run_tests.outputs.logs }}\`\`\`\"
+          }"
+
+          curl -X POST -H 'Content-type: application/json' \
+            --data "$PAYLOAD" \
+            ${{ secrets.SLACK_WEBHOOK_URL }}

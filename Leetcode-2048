@@ -1,0 +1,56 @@
+// Why the upper bound = 1224444
+
+// Let’s reason about what the maximum possible balanced number could be.
+
+// Step 1️ – Highest digit possible
+
+// The digit 9 would need to appear 9 times to be valid.
+
+// That means the number would need at least 9 digits.
+
+// But if we use digits up to 9, the number would have to be huge (hundreds of millions).
+// However, the LeetCode problem restricts n ≤ 10⁶, so you only need to search up to a reasonable upper bound where such balanced numbers can exist within 7 digits.
+
+// Step 2️  – Known largest balanced number within 7 digits
+
+// Here are all valid balanced numbers ≤ 10⁷:
+
+// 1, 22, 122, 333, 1333, 4444, 14444, 22333, 55555, 1224444, ...
+
+// The largest 7-digit balanced number is 1224444.:
+
+// So, no balanced number exists beyond that within 7 digits.
+// After 1224444, the next balanced number would require 5 or 6 copies of higher digits (like 555555 or 666666), which exceed the range relevant to the problem constraints.
+
+// Therefore:
+
+// We stop searching at 1224444 because:
+
+// It’s the largest 7-digit balanced number possible.
+
+Searching beyond that is wasteful and unnecessary for the given input range.
+class Solution {
+public:
+    bool is_balanced(int x) {
+        vector<int> frq(10, 0);
+        while (x) {
+            frq[x % 10]++;
+            x /= 10;
+        }
+        for (int i = 0; i < 10; i++) {
+            if (frq[i] > 0 && frq[i] != i) {
+                return false;
+            }
+        }
+        return true;
+    }
+    int beautiful_number(int n) {
+        for (int i = n + 1; i <= 1224444; i++) {
+            if (is_balanced(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    int nextBeautifulNumber(int n) { return beautiful_number(n); }
+};
